@@ -2,7 +2,7 @@ name: Docker
 
 on:
   schedule:
-    - cron: "*/5 * * * * *":
+    - cron: "*/5 * * * * *"
 
 jobs:
   push:
