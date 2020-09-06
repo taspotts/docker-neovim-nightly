@@ -52,6 +52,7 @@ jobs:
           [ SUCCESS ] \
             && sudo gem install rbnacl \
             && ENCRYPTED_SECRET=$(ruby encrypt_nightly_version.rb "$NIGHTLY_VERSION") \
+            && echo "https://api.github.com/repos/${{ github.repo }}/actions/secrets/LAST_NIGHTLY_TIMESTAMP" \
             && curl \
               -X PUT \
               -H "Accept: application/vnd.github.v3+json" \
