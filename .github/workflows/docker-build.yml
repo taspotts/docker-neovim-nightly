@@ -25,6 +25,8 @@ jobs:
             | tr -d \  \
             | head -n 1))
 
+          echo "nightly version $NIGHTLY_VERSION"
+
           # story the value for future steps
           echo "::set-output name=nightly_version::$NIGHTLY_VERSION"
         id: get_nightly_version
