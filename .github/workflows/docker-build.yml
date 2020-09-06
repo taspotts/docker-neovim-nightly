@@ -1,8 +1,9 @@
 name: Docker
 
-on:
-  schedule:
-    - cron: '*/5 * * * *'
+on: push
+
+  # schedule:
+    # - cron: '*/5 * * * *'
 
 jobs:
   push:
@@ -25,7 +26,7 @@ jobs:
             | head -n 1))
 
           # story the value for future steps
-          echo "##[set-output name=nightly_version;]$NIGHTLY_VERSION"
+          echo "::set-output name=nightly_version::$NIGHTLY_VERSION"
         id: get_nightly_version
 
       - name: Log into GitHub Container Registry
