@@ -25,8 +25,6 @@ jobs:
             | tr -d \  \
             | head -n 1))
 
-          echo "nightly version $NIGHTLY_VERSION"
-
           # story the value for future steps
           echo "::set-output name=nightly_version::$NIGHTLY_VERSION"
         id: get_nightly_version
@@ -37,8 +35,8 @@ jobs:
       - name: Build image, push if build is successful
         run: |
           docker build \
-          --build-arg NIGHTLY_VERSION=${{ steps.get_nightly_version.nightly_version }} \
+          --build-arg NIGHTLY_VERSION=${{ steps.get_nightly_version.outputs.nightly_version }} \
           -t brandoncc/neovim-nightly:latest \
-          -t brandoncc/neovim-nightly:${{ steps.get_nightly_version.nightly_version }} \
+          -t brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }} \
           . \
           && docker push brandoncc/neovim-nightly:latest
