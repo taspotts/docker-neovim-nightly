@@ -52,6 +52,7 @@ jobs:
           [ SUCCESS ] \
             && sudo gem install rbnacl \
             && ENCRYPTED_SECRET=$(ruby encrypt_nightly_version.rb "$NIGHTLY_VERSION") \
+            && echo "encrypted_secret: $ENCRYPTED_SECRET" \
             && curl \
               -X PUT \
               -H "Accept: application/vnd.github.v3+json" \
