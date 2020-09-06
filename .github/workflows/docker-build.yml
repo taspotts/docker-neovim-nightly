@@ -1,24 +1,41 @@
-name: Build and Push Docker Image
+name: Docker
+
 on:
   schedule:
-  - cron: "*/10 * * * *"
+    - cron: "*/5 * * * * *":
 
 jobs:
-  build:
-    name: Build and Push
+  push:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Get nightly version
-        run: echo "##[set-output name=nightly_version;]$(sh /build.sh)"
+        run:
+          # Get the "created_at" timestamp of the nightly release and replace
+          # : and - characters in it with underscores
+          NIGHTLY_VERSION=$(sed 's,[:-],_,g' <(\
+            curl -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/neovim/neovim/releases/tags/nightly \
+            | grep created_at \
+            | cut -d : -f 2,3 \
+            | tr -d \" \
+            | tr -d \  \
+            | head -n 1))
+
+          # story the value for future steps
+          echo "##[set-output name=nightly_version;]$NIGHTLY_VERSION"
         id: get_nightly_version
 
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: brandoncc/neovim-nightly
-          tags: ${{ steps.get_nightly_version.nightly_version }},latest
+      - name: Log into GitHub Container Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Build image, push if build is successful
+        run: |
+          docker build \
+          --build-arg NIGHTLY_VERSION=${{ steps.get_nightly_version.nightly_version }}
+          -t brandoncc/neovim-nightly:latest \
+          -t brandoncc/neovim-nightly:${{ steps.get_nightly_version.nightly_version }} \
+          . \
+          && docker push brandoncc/neovim-nightly:latest

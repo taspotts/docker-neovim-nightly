@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install --no-install-recommends -qq \
   curl git ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
+ARG NIGHTLY_VERSION
+
 RUN curl -fLo nvim-linux64.tar.gz https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz \
   && tar -xzf nvim-linux64.tar.gz \
   && mv nvim-linux64/share/* /usr/local/share/ \
