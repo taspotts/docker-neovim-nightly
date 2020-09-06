@@ -34,7 +34,7 @@ jobs:
       - name: Build image, push if build is successful
         run: |
           docker build \
-          --build-arg NIGHTLY_VERSION=${{ steps.get_nightly_version.nightly_version }}
+          --build-arg NIGHTLY_VERSION=${{ steps.get_nightly_version.nightly_version }} \
           -t brandoncc/neovim-nightly:latest \
           -t brandoncc/neovim-nightly:${{ steps.get_nightly_version.nightly_version }} \
           . \
