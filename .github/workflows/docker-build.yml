@@ -42,5 +42,5 @@ jobs:
           -t brandoncc/neovim-nightly:latest \
           -t brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }} \
           . \
-          && docker push brandoncc/neovim-nightly:latest
+          && docker push brandoncc/neovim-nightly:latest \
           && docker push brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }}
