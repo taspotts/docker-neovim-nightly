@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Get nightly version
-        run:
+        run: |
           # Get the "created_at" timestamp of the nightly release and replace
           # : and - characters in it with underscores
           NIGHTLY_VERSION=$(sed 's,[:-],_,g' <(\
