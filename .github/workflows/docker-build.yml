@@ -25,6 +25,8 @@ jobs:
             | tr -d \  \
             | head -n 1))
 
+          echo "$NIGHTLY_VERSION" > nightly_version.txt
+
           # story the value for future steps
           echo "::set-output name=nightly_version::$NIGHTLY_VERSION"
         id: get_nightly_version
@@ -32,15 +34,25 @@ jobs:
       - name: Log into GitHub Container Registry
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Pull existing latest
-        run: docker pull brandoncc/neovim-nightly:latest
 
       - name: Build image, push if build is successful
         run: |
+          SUCCESS=false
+
           docker build \
           --build-arg NIGHTLY_VERSION=${{ steps.get_nightly_version.outputs.nightly_version }} \
           -t brandoncc/neovim-nightly:latest \
           -t brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }} \
           . \
           && docker push brandoncc/neovim-nightly:latest \
-          && docker push brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }}
+          && docker push brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }} \
+          && SUCCESS=true
+
+          [ SUCCESS ] \
+            && gem install rbnacl \
+            && ENCRYPTED_SECRET=$(ruby encrypt_nightly_version.rb $NIGHTLY_VERSION) \
+            && curl \
+              -X PUT \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repo }}/actions/secrets/LAST_NIGHTLY_TIMESTAMP \
+              -d '{"encrypted_value":"$ENCRYPTED_SECRET"}'
