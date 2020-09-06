@@ -1,6 +1,6 @@
 require "rbnacl"
 require "base64"
-key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
+key = Base64.decode64(ARGV[1])
 public_key = RbNaCl::PublicKey.new(key)
 
 

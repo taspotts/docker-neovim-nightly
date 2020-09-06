@@ -51,11 +51,11 @@ jobs:
 
           [ SUCCESS ] \
             && sudo gem install rbnacl \
-            && ENCRYPTED_SECRET=$(ruby encrypt_nightly_version.rb "$NIGHTLY_VERSION") \
+            && ENCRYPTED_SECRET=$(ruby encrypt_nightly_version.rb "$NIGHTLY_VERSION" "${{ secrets.PUBLIC_KEY }}") \
             && echo "encrypted_secret: $ENCRYPTED_SECRET" \
             && curl \
               -X PUT \
               -H "Accept: application/vnd.github.v3+json" \
               -H 'authorization: Bearer ${{ secrets.ACCESS_TOKEN }}' \
               https://api.github.com/repos/${{ github.repository }}/actions/secrets/LAST_NIGHTLY_TIMESTAMP \
-              -d '{"encrypted_value":"$ENCRYPTED_SECRET"}'
+              -d '{"encrypted_value":"$ENCRYPTED_SECRET", "key_id": "${{ secrets.PUBLIC_KEY_ID }}"}'
