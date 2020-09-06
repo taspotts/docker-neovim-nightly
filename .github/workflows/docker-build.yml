@@ -38,19 +38,20 @@ jobs:
       - name: Build image, push if build is successful
         run: |
           SUCCESS=false
+          NIGHTLY_VERSION=${{ steps.get_nightly_version.outputs.nightly_version  }}
 
           docker build \
-          --build-arg NIGHTLY_VERSION=${{ steps.get_nightly_version.outputs.nightly_version }} \
+          --build-arg NIGHTLY_VERSION=$NIGHTLY_VERSION \
           -t brandoncc/neovim-nightly:latest \
-          -t brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }} \
+          -t brandoncc/neovim-nightly:$NIGHTLY_VERSION \
           . \
           && docker push brandoncc/neovim-nightly:latest \
-          && docker push brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }} \
+          && docker push brandoncc/neovim-nightly:$NIGHTLY_VERSION \
           && SUCCESS=true
 
           [ SUCCESS ] \
             && sudo gem install rbnacl \
-            && ENCRYPTED_SECRET=$(ruby encrypt_nightly_version.rb $NIGHTLY_VERSION) \
+            && ENCRYPTED_SECRET=$(ruby encrypt_nightly_version.rb "$NIGHTLY_VERSION") \
             && curl \
               -X PUT \
               -H "Accept: application/vnd.github.v3+json" \
