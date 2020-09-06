@@ -55,6 +55,6 @@ jobs:
             && curl \
               -X PUT \
               -H "Accept: application/vnd.github.v3+json" \
-              -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+              -H 'authorization: Bearer ${{ secrets.ACCESS_TOKEN }}' \
               https://api.github.com/repos/${{ github.repository }}/actions/secrets/LAST_NIGHTLY_TIMESTAMP \
               -d '{"encrypted_value":"$ENCRYPTED_SECRET"}'
