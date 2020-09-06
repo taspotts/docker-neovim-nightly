@@ -25,8 +25,6 @@ jobs:
             | tr -d \  \
             | head -n 1))
 
-          echo "$NIGHTLY_VERSION" > nightly_version.txt
-
           # story the value for future steps
           echo "::set-output name=nightly_version::$NIGHTLY_VERSION"
         id: get_nightly_version
@@ -41,9 +39,6 @@ jobs:
           NIGHTLY_VERSION=${{ steps.get_nightly_version.outputs.nightly_version  }}
           PREVIOUS_NIGHTLY_VERSION=${{ secrets.LAST_NIGHTLY_TIMESTAMP }}
           
-          echo "Current nightly version: $NIGHTLY_VERSION"
-          echo "Previous nightly version: $NIGHTLY_VERSION"
-
           [ "$PREVIOUS_NIGHTLY_VERSION" != "$NIGHTLY_VERSION" ] \
           && docker build \
             --build-arg NIGHTLY_VERSION=$NIGHTLY_VERSION \
