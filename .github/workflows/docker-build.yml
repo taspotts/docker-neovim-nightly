@@ -48,7 +48,7 @@ jobs:
           && docker push brandoncc/neovim-nightly:$NIGHTLY_VERSION \
           && SUCCESS=true
 
-          [ $SUCCESS ] \
+          [ "$SUCCESS" = "true" ] \
             && sudo gem install rbnacl \
             && ENCRYPTED_SECRET=$(ruby encrypt_nightly_version.rb "$NIGHTLY_VERSION" "${{ secrets.PUBLIC_KEY }}") \
             && curl \
