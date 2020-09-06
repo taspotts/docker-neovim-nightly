@@ -32,6 +32,9 @@ jobs:
       - name: Log into GitHub Container Registry
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
+      - name: Pull existing latest
+        run: docker pull brandoncc/neovim-nightly:latest
+
       - name: Build image, push if build is successful
         run: |
           docker build \
@@ -40,3 +43,4 @@ jobs:
           -t brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }} \
           . \
           && docker push brandoncc/neovim-nightly:latest
+          && docker push brandoncc/neovim-nightly:${{ steps.get_nightly_version.outputs.nightly_version }}
