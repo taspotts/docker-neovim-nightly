@@ -7,11 +7,11 @@ docker.
 
 Build steps:
 
-- `docker build --no-cache -t brandoncc/neovim-nightly:latest .`
-- `docker push brandoncc/neovim-nightly:latest`
+- `docker build --no-cache -t taspotts/neovim-nightly:latest .`
+- `docker push taspotts/neovim-nightly:latest`
 
 #### Thanks
 
 Thanks goes out to [FL3SH](https://github.com/FL3SH) for helping me create this
 base image for vim-be-good, instead of the 2GB image I originally created and
-used [docker-neovim-master](https://github.com/brandoncc/docker-neovim-master).
+used [docker-neovim-master](https://github.com/taspotts/docker-neovim-master).

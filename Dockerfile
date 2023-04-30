@@ -1,7 +1,6 @@
-FROM debian:stretch-slim
+FROM --platform=linux/amd64 debian:bullseye-slim
 WORKDIR /usr/src
 
-LABEL maintainer="brandoncc@hey.com"
 
 RUN apt-get update && apt-get install --no-install-recommends -qq \
   curl git ca-certificates \
